@@ -1,0 +1,89 @@
+cabal-version:      3.6
+name:               nft
+version:            0.1.0
+
+common common
+  default-language:   GHC2021
+  default-extensions:
+    DataKinds
+    DeriveAnyClass
+    DerivingStrategies
+    DerivingVia
+    GADTs
+    LambdaCase
+    MultiWayIf
+    OverloadedStrings
+    RecordWildCards
+    RoleAnnotations
+    TypeFamilies
+    UndecidableInstances
+    ViewPatterns
+
+  ghc-options:        -Wall -Wincomplete-uni-patterns -Wunused-packages
+
+  -- speed-ups GHCi considerably
+  ghc-options:        -fno-show-valid-hole-fits
+
+common plutus-ghc-options
+  -- so unfoldings are present even when compiled without optmizations
+  ghc-options:
+    -fno-ignore-interface-pragmas -fno-omit-interface-pragmas
+    -Wno-partial-type-signatures
+
+  -- expose all unfoldings, so plutustx compiler can do its job
+  ghc-options:
+    -fexpose-all-unfoldings -fobject-code
+    -fplugin-opt PlutusTx.Plugin:defer-errors
+
+  -- set target plutus-core version
+  ghc-options: -fplugin-opt PlutusTx.Plugin:target-version=1.0.0
+
+library nft-onchain
+  import:           common, plutus-ghc-options
+  hs-source-dirs:   onchain
+  exposed-modules:
+    NFT.OnChain.NFT
+    NFT.OnChain.NFT.Compiled
+  build-depends:
+    , base
+    , plutus-core
+    , plutus-ledger-api
+    , plutus-tx
+    , plutus-tx-plugin
+    , bytestring
+    , cardano-api
+
+library nft-offchain
+  import:           common
+  hs-source-dirs:   offchain
+  exposed-modules:
+    NFT.Api
+    NFT.Script
+  build-depends:
+    , base
+    , atlas-cardano
+    , containers
+    , nft:nft-onchain
+
+executable place-nft
+  import:           common
+  hs-source-dirs:   app
+  main-is:          place.hs
+  ghc-options:
+    -O2 -threaded -rtsopts -with-rtsopts=-T
+  build-depends:
+    , base
+    , atlas-cardano
+    , text
+    , nft:nft-offchain
+
+executable retrieve-nft
+  import:           common
+  hs-source-dirs:   app
+  main-is:          retrieve.hs
+  ghc-options:
+    -O2 -threaded -rtsopts -with-rtsopts=-T
+  build-depends:
+    , base
+    , atlas-cardano
+    , nft:nft-offchain
