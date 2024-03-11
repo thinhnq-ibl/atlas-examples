@@ -1,49 +1,43 @@
 {-# LANGUAGE DataKinds         #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell   #-} 
+{-# LANGUAGE TemplateHaskell   #-}
 
 module NFT.OnChain.NFT (mkWrappedNFTPolicy) where
 
 
-import qualified Data.ByteString.Char8      as BS8
 import           PlutusLedgerApi.V1.Value     (flattenValue)
-import           PlutusLedgerApi.V2       (BuiltinData, CurrencySymbol,
+import           PlutusLedgerApi.V2       (BuiltinData,
                                              ScriptContext (scriptContextTxInfo),
-                                             TxId (TxId, getTxId),
-                                             TxInInfo (txInInfoOutRef),
                                              TxInfo (txInfoInputs, txInfoMint),
-                                             )   
-import           PlutusLedgerApi.V1         (TokenName)    
-import           PlutusLedgerApi.V1      (TxOutRef)                                    
+                                             )
+import           PlutusLedgerApi.V1         (TokenName)
 import qualified PlutusTx
-import           PlutusTx.Builtins.Internal (BuiltinByteString (BuiltinByteString))
-import           PlutusTx.Prelude           (Bool (False, True), Eq ((==)), any,
+import           PlutusTx.Prelude           (Bool (True), Eq ((==)), any,
                                              traceIfFalse, ($), (&&), (.), check)
-import           Prelude                    (Show (show), String)
 
 {-# INLINABLE mkNFTPolicy #-}
-mkNFTPolicy ::  TokenName -> () ->  ScriptContext -> Bool
+mkNFTPolicy ::  TokenName -> () ->  PlutusLedgerApi.V2.ScriptContext -> Bool
 mkNFTPolicy tn _ ctx = traceIfFalse "UTxO not consumed"   hasUTxO           &&
                              traceIfFalse "wrong amount minted" checkMintedAmount
   where
-    info ::  TxInfo
+    info ::  PlutusLedgerApi.V2.TxInfo
     info =  scriptContextTxInfo ctx
 
     hasUTxO :: Bool
     hasUTxO =  True --any (\i ->  txInInfoOutRef i == oref) $  txInfoInputs info
 
     checkMintedAmount :: Bool
-    checkMintedAmount = any (\(_,tn'',i) -> i == 1 && tn'' == tn) . flattenValue $ (txInfoMint info) 
+    checkMintedAmount = any (\(_,tn'',i) -> i == 1 && tn'' == tn) . flattenValue $ txInfoMint info
 
 -- nftPolicy ::  MintingPolicy
 -- nftPolicy = mkMintingPolicyScript $$(PlutusTx.compile [|| mkNFTPolicy ||])
 
 
 {-# INLINABLE mkWrappedNFTPolicy #-}
-mkWrappedNFTPolicy :: TokenName -> BuiltinData -> BuiltinData -> ()
+mkWrappedNFTPolicy :: TokenName -> PlutusLedgerApi.V2.BuiltinData -> PlutusLedgerApi.V2.BuiltinData -> ()
 mkWrappedNFTPolicy tn _ ctx = check $ mkNFTPolicy tn () (PlutusTx.unsafeFromBuiltinData ctx)
-  where
+  -- where
     -- oref ::  TxOutRef
     -- oref =  TxOutRef
     --     ( PlutusTx.unsafeFromBuiltinData tid)

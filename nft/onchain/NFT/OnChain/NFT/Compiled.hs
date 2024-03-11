@@ -9,7 +9,7 @@ import qualified PlutusTx
 
 import           NFT.OnChain.NFT (mkWrappedNFTPolicy)
 import           PlutusLedgerApi.V1         (TokenName)  
-import           PlutusLedgerApi.V2       (BuiltinData, UnsafeFromData (unsafeFromBuiltinData))
+import           PlutusLedgerApi.V2       (BuiltinData)
 import           PlutusCore.Version      (plcVersion100)
 
 -- | Generates validator given parameter.
