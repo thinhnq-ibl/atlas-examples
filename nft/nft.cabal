@@ -65,25 +65,14 @@ library nft-offchain
     , containers
     , nft:nft-onchain
 
-executable place-nft
+executable mint-nft
   import:           common
   hs-source-dirs:   app
-  main-is:          place.hs
+  main-is:          mint.hs
   ghc-options:
     -O2 -threaded -rtsopts -with-rtsopts=-T
   build-depends:
     , base
     , atlas-cardano
     , text
-    , nft:nft-offchain
-
-executable retrieve-nft
-  import:           common
-  hs-source-dirs:   app
-  main-is:          retrieve.hs
-  ghc-options:
-    -O2 -threaded -rtsopts -with-rtsopts=-T
-  build-depends:
-    , base
-    , atlas-cardano
     , nft:nft-offchain
