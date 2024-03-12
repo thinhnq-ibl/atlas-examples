@@ -8,10 +8,17 @@ import           GeniusYield.Types
 import           NFT.Script        (nftValidator)
 
 mintNFTToken ::
-  GYTxQueryMonad m =>
   -- | TokenName generated with combination of IPFS hash
   GYTokenName ->
-  m (GYTxSkeleton 'PlutusV2)
-mintNFTToken tn = do
+  GYAddress ->
+  GYTxOutRef -> 
+  GYTxSkeleton 'PlutusV2
+mintNFTToken tn minter utxo = do
   let nftPolicy = nftValidator tn
-  return $ mustMint (GYMintScript nftPolicy) unitRedeemer tn 1
+      nftMintingPolicyId = mintingPolicyId nftPolicy
+      output = GYTxOut minter nftValue Nothing Nothing
+      nftValue = valueSingleton (GYToken nftMintingPolicyId tn) 1
+
+  mustHaveInput (GYTxIn utxo GYTxInWitnessKey)
+        <> mustMint (GYMintScript nftPolicy) unitRedeemer tn 1 
+        <> mustHaveOutput output
