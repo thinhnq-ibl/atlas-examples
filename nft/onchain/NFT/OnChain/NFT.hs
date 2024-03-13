@@ -31,9 +31,7 @@ mkNFTPolicy oref tn _ ctx = traceIfFalse "UTxO not consumed"   hasUTxO          
     checkMintedAmount = any (\(_,tn'',i) -> i == 1 && tn'' == tn) . flattenValue $ txInfoMint info
 
 {-# INLINABLE mkWrappedNFTPolicy #-}
-mkWrappedNFTPolicy :: TxId -> Integer -> TokenName -> BuiltinData -> BuiltinData -> ()
-mkWrappedNFTPolicy tid ix tn _ ctx = check $ mkNFTPolicy oref tn () (unsafeFromBuiltinData ctx)
-  where
-    oref = TxOutRef tid ix
+mkWrappedNFTPolicy :: TxOutRef -> TokenName -> BuiltinData -> BuiltinData -> ()
+mkWrappedNFTPolicy oref tn _ ctx = check $ mkNFTPolicy oref tn () (unsafeFromBuiltinData ctx)
 
 

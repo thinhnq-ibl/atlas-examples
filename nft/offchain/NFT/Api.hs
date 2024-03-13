@@ -14,11 +14,15 @@ mintNFTToken ::
   GYTxOutRef -> 
   GYTxSkeleton 'PlutusV2
 mintNFTToken tn minter utxo = do
-  let nftPolicy = nftValidator tn
+  let nftPolicy = nftValidator utxo tn
       nftMintingPolicyId = mintingPolicyId nftPolicy
       output = GYTxOut minter nftValue Nothing Nothing
       nftValue = valueSingleton (GYToken nftMintingPolicyId tn) 1
+      input = GYTxIn {
+        gyTxInTxOutRef = utxo,
+        gyTxInWitness = GYTxInWitnessKey
+      }
 
-  mustHaveInput (GYTxIn utxo GYTxInWitnessKey)
+  mustHaveInput input
         <> mustMint (GYMintScript nftPolicy) unitRedeemer tn 1 
         <> mustHaveOutput output
