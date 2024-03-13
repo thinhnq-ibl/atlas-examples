@@ -5,5 +5,5 @@ module NFT.Script
 import           GeniusYield.Types
 import qualified NFT.OnChain.NFT.Compiled as OnChain
 
-nftValidator :: GYTokenName -> GYMintingPolicy 'PlutusV2
-nftValidator = mintingPolicyFromPlutus . OnChain.nftPolicy . tokenNameToPlutus
+nftValidator :: GYTxOutRef -> GYTokenName -> GYMintingPolicy 'PlutusV2
+nftValidator oref tn = mintingPolicyFromPlutus $ OnChain.nftPolicy (txOutRefToPlutus oref) (tokenNameToPlutus tn)
