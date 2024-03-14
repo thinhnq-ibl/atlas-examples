@@ -14,7 +14,7 @@
 {-# LANGUAGE TypeFamilies          #-}
 {-# LANGUAGE TypeOperators         #-}
 
-module Oracle.OnChain.Oracle (mkWrappedValidator) where
+module Oracle.OnChain.Oracle (mkWrappedValidator, OracleDatum(..)) where
 import           PlutusLedgerApi.V1.Value    (AssetClass (..),
                                               assetClassValueOf)
 import           PlutusLedgerApi.V2          (UnsafeFromData (..))

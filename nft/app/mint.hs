@@ -29,7 +29,7 @@ main = do
     let nid    = cfgNetworkId coreCfg
         sender = addressFromPubKeyHash nid $ pubKeyHash $ paymentVerificationKey skey
     printf "sender %s \n" sender
-    withCfgProviders coreCfg "place-vesting" $ \providers -> do
+    withCfgProviders coreCfg "mint-nft" $ \providers -> do
         utxos <- gyQueryUtxosAtAddresses providers [sender]
         let utxoM = utxosLookup oref utxos
         case utxoM of

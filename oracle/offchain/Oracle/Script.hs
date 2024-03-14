@@ -1,9 +1,9 @@
 module Oracle.Script
-    ( oracleValidator
+    ( oracleScriptValidator
     ) where
 
 import           GeniusYield.Types
 import qualified Oracle.OnChain.Oracle.Compiled as OnChain
 
-oracleValidator :: GYTxOutRef -> GYTokenName -> GYMintingPolicy 'PlutusV2
-oracelValidator oref tn = mintingPolicyFromPlutus $ OnChain.oracleValidator (txOutRefToPlutus oref) (tokenNameToPlutus tn)
+oracleScriptValidator :: GYMintingPolicyId -> GYTokenName -> GYPubKeyHash -> GYValidator 'PlutusV2
+oracleScriptValidator cs tn pkh= validatorFromPlutus $ OnChain.oracleValidator (mintingPolicyIdCurrencySymbol cs) (tokenNameToPlutus tn) (pubKeyHashToPlutus pkh)
