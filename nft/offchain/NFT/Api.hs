@@ -5,13 +5,13 @@ module NFT.Api
 import           GeniusYield.TxBuilder
 import           GeniusYield.Types
 
-import           NFT.Script        (nftValidator)
+import           NFT.Script            (nftValidator)
 
 mintNFTToken ::
   -- | TokenName generated with combination of IPFS hash
   GYTokenName ->
   GYAddress ->
-  GYTxOutRef -> 
+  GYTxOutRef ->
   GYTxSkeleton 'PlutusV2
 mintNFTToken tn minter utxo = do
   let nftPolicy = nftValidator utxo tn
@@ -24,5 +24,5 @@ mintNFTToken tn minter utxo = do
       }
 
   mustHaveInput input
-        <> mustMint (GYMintScript nftPolicy) unitRedeemer tn 1 
+        <> mustMint (GYMintScript nftPolicy) unitRedeemer tn 1
         <> mustHaveOutput output
