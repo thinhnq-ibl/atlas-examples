@@ -76,3 +76,15 @@ executable oracle
     , atlas-cardano
     , text
     , oracle:oracle-offchain
+
+executable oracle-update
+  import:           common
+  hs-source-dirs:   app
+  main-is:          oracle-update.hs
+  ghc-options:
+    -O2 -threaded -rtsopts -with-rtsopts=-T
+  build-depends:
+    , base
+    , atlas-cardano
+    , text
+    , oracle:oracle-offchain
