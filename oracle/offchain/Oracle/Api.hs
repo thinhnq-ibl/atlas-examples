@@ -1,7 +1,8 @@
 module Oracle.Api
     ( setupOracle,
     updateOracle,
-    oracleAddress
+    oracleAddress,
+    deleteOracle
     ) where
 
 import           GeniusYield.TxBuilder
@@ -9,7 +10,7 @@ import           GeniusYield.Types
 
 import           Data.Maybe            (fromJust)
 import           Oracle.OnChain.Oracle (OracleDatum (..),
-                                        OracleRedeemer (Update))
+                                        OracleRedeemer (Delete, Update))
 import           Oracle.Script         (oracleScriptValidator)
 
 setupOracle ::
@@ -83,3 +84,33 @@ oracleAddress nid cs tn minter = do
       orcVld = oracleScriptValidator cs tn pkh
       oracleAddress' = addressFromValidator nid orcVld
   oracleAddress'
+
+
+deleteOracle ::
+  GYMintingPolicyId ->
+  GYTokenName ->
+  GYAddress ->
+  GYTxOutRef ->
+  Integer ->
+  GYTxSkeleton 'PlutusV2
+deleteOracle cs tn minter utxo oldRate = do
+  let pkh = fromJust $ addressToPubKeyHash minter
+      output = GYTxOut minter nftValue Nothing Nothing
+      -- lovelace
+      datumOld = OracleDatum {
+        rate = oldRate
+      }
+
+      redeemer = Delete
+
+      nftValue =  valueSingleton (GYToken cs tn) 1
+      input = GYTxIn {
+        gyTxInTxOutRef = utxo
+        , gyTxInWitness  = GYTxInWitnessScript
+                (GYInScript $ oracleScriptValidator cs tn pkh)
+                (datumFromPlutusData datumOld) (redeemerFromPlutusData redeemer)
+      }
+
+  mustBeSignedBy (fromJust $ addressToPubKeyHash minter)
+    <> mustHaveOutput output
+    <> mustHaveInput input
