@@ -1,12 +1,12 @@
 {-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
 import           Data.Text             (pack)
 import           GeniusYield.GYConfig
+import           GeniusYield.Imports   (IsString (..))
 import           GeniusYield.TxBuilder
 import           GeniusYield.Types
+import           NFT.Api
 import           System.Environment    (getArgs)
 import           Text.Printf           (printf)
-import           NFT.Api
-import GeniusYield.Imports (IsString(..))
 
 -- | Getting path for our core configuration and the beneficiary.
 parseArgs :: IO (FilePath, FilePath, GYTxOutRef, GYTokenName)

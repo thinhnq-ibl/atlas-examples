@@ -3,17 +3,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module NFT.OnChain.NFT (mkWrappedNFTPolicy) where
-import PlutusLedgerApi.V3
-    ( ScriptContext,
-      TxInfo,
-      TxOutRef(..),
-      TxId,
-      unsafeFromBuiltinData,
-      TxInfo(..),
-      ScriptContext(..),
-      TxInInfo(..) )
-import PlutusTx.Prelude ( Bool, BuiltinData, Integer, check, ($), any, Eq ((==)), (&&), (.), traceIfFalse )
-import PlutusLedgerApi.V1.Value
+import           PlutusLedgerApi.V1.Value
+import           PlutusLedgerApi.V3       (ScriptContext (..), TxId,
+                                           TxInInfo (..), TxInfo (..),
+                                           TxOutRef (..), unsafeFromBuiltinData)
+import           PlutusTx.Prelude         (Bool, BuiltinData, Eq ((==)),
+                                           Integer, any, check, traceIfFalse,
+                                           ($), (&&), (.))
 
 
 {-# INLINABLE mkNFTPolicy #-}

@@ -1,11 +1,11 @@
-{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE DataKinds             #-}
 {-# LANGUAGE DeriveAnyClass        #-}
 {-# LANGUAGE DeriveGeneric         #-}
 {-# LANGUAGE FlexibleContexts      #-}
 {-# LANGUAGE LambdaCase            #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE NoImplicitPrelude #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoImplicitPrelude     #-}
+{-# LANGUAGE OverloadedStrings     #-}
 {-# LANGUAGE RankNTypes            #-}
 {-# LANGUAGE RecordWildCards       #-}
 {-# LANGUAGE ScopedTypeVariables   #-}
@@ -15,28 +15,22 @@
 {-# LANGUAGE TypeOperators         #-}
 
 module Oracle.OnChain.Oracle (mkWrappedValidator) where
-import PlutusTx.Prelude (Integer, Bool, Maybe (..), (&&), traceError, ($), Eq ((==)), isJust, check)
+import           PlutusLedgerApi.V1.Value    (AssetClass (..),
+                                              assetClassValueOf)
+import           PlutusLedgerApi.V2          (UnsafeFromData (..))
+import           PlutusLedgerApi.V2.Contexts (findDatum, findOwnInput,
+                                              getContinuingOutputs, txSignedBy)
+import           PlutusLedgerApi.V3          (BuiltinData, CurrencySymbol,
+                                              Datum (..), OutputDatum (..),
+                                              PubKeyHash, ScriptContext (..),
+                                              TokenName, TxInInfo (..), TxInfo,
+                                              TxOut (..), txOutDatum)
 import qualified PlutusTx
-import PlutusLedgerApi.V3
-    ( TxOut,
-      TxInfo,
-      PubKeyHash,
-      OutputDatum(..),
-      Datum(..),
-      ScriptContext,
-      BuiltinData,
-      txOutDatum,
-      ScriptContext(..),
-      TxInInfo(..),
-      TxOut(..),
-      CurrencySymbol,
-      TokenName )
-import PlutusLedgerApi.V1.Value
-    ( AssetClass, assetClassValueOf, AssetClass(..) )
-import Prelude (Show)
-import PlutusLedgerApi.V2.Contexts(findDatum, findOwnInput, txSignedBy, getContinuingOutputs)
-import PlutusTx.Trace (traceIfFalse)
-import PlutusLedgerApi.V2 (UnsafeFromData(..))
+import           PlutusTx.Prelude            (Bool, Eq ((==)), Integer,
+                                              Maybe (..), check, isJust,
+                                              traceError, ($), (&&))
+import           PlutusTx.Trace              (traceIfFalse)
+import           Prelude                     (Show)
 
 -- Oracle Datum
 newtype OracleDatum = OracleDatum {rate :: Integer}
