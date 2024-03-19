@@ -40,3 +40,10 @@ delete
 ```
 cabal run oracle-delete ./config.json ./minter.skey "8b84f7e60520d7795ee25235eb474d0277571115750ebbc5e2a28a5f86ba75bb#0" 160b0abfd68eb178b01fe2619f2127c89db7492d1958952dab371c21 53505f677a7771 3000000
 ```
+
+## oracle server
+- run server
+
+```
+cabal run oracle-server ./config.json ./minter.skey 
+```
