@@ -1,0 +1,203 @@
+{
+    "definitions": {
+        "DeleteOracleParams": {
+            "properties": {
+                "csd": {
+                    "$ref": "#/definitions/GYMintingPolicyId"
+                },
+                "oldrated": {
+                    "type": "integer"
+                },
+                "orefd": {
+                    "$ref": "#/definitions/GYTxOutRef"
+                },
+                "tnd": {
+                    "$ref": "#/definitions/GYTokenName"
+                }
+            },
+            "required": [
+                "orefd",
+                "csd",
+                "tnd",
+                "oldrated"
+            ],
+            "type": "object"
+        },
+        "GYMintingPolicyId": {
+            "description": "This is the hash of a minting policy script.",
+            "example": "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef",
+            "format": "hex",
+            "maxLength": 56,
+            "minLength": 56,
+            "type": "string"
+        },
+        "GYTokenName": {
+            "description": "This is the name of a token.",
+            "example": "476f6c64",
+            "format": "hex",
+            "maxLength": 64,
+            "pattern": "[0-9a-fA-F]+",
+            "type": "string"
+        },
+        "GYTxId": {
+            "example": "a8d75b90a052302c1232bedd626720966b1697fe38de556c617c340233688935",
+            "type": "string"
+        },
+        "GYTxOutRef": {
+            "example": "4293386fef391299c9886dc0ef3e8676cbdbc2c9f2773507f1f838e00043a189#1",
+            "format": "hex",
+            "pattern": "[0-9a-fA-F]{64}#\"d+",
+            "type": "string"
+        },
+        "InitOracleParams": {
+            "properties": {
+                "cs": {
+                    "$ref": "#/definitions/GYMintingPolicyId"
+                },
+                "oref": {
+                    "$ref": "#/definitions/GYTxOutRef"
+                },
+                "rate": {
+                    "type": "integer"
+                },
+                "tn": {
+                    "$ref": "#/definitions/GYTokenName"
+                }
+            },
+            "required": [
+                "oref",
+                "cs",
+                "tn",
+                "rate"
+            ],
+            "type": "object"
+        },
+        "UpdateOracleParams": {
+            "properties": {
+                "csu": {
+                    "$ref": "#/definitions/GYMintingPolicyId"
+                },
+                "oldrateu": {
+                    "type": "integer"
+                },
+                "orefu": {
+                    "$ref": "#/definitions/GYTxOutRef"
+                },
+                "rateu": {
+                    "type": "integer"
+                },
+                "tnu": {
+                    "$ref": "#/definitions/GYTokenName"
+                }
+            },
+            "required": [
+                "orefu",
+                "csu",
+                "tnu",
+                "rateu",
+                "oldrateu"
+            ],
+            "type": "object"
+        }
+    },
+    "info": {
+        "title": "",
+        "version": ""
+    },
+    "paths": {
+        "/oracle/delete": {
+            "post": {
+                "consumes": [
+                    "application/json;charset=utf-8"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/DeleteOracleParams"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json;charset=utf-8"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/GYTxId"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid `body`"
+                    }
+                }
+            }
+        },
+        "/oracle/init": {
+            "post": {
+                "consumes": [
+                    "application/json;charset=utf-8"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/InitOracleParams"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json;charset=utf-8"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/GYTxId"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid `body`"
+                    }
+                }
+            }
+        },
+        "/oracle/update": {
+            "post": {
+                "consumes": [
+                    "application/json;charset=utf-8"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UpdateOracleParams"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json;charset=utf-8"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/GYTxId"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid `body`"
+                    }
+                }
+            }
+        }
+    },
+    "swagger": "2.0"
+}

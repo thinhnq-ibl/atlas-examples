@@ -100,3 +100,43 @@ executable oracle-delete
     , atlas-cardano
     , text
     , oracle:oracle-offchain
+
+library oracle-server-lib
+  import:           common
+  hs-source-dirs:   server-lib
+  exposed-modules:
+    Oracle.Api.Api
+    Oracle.Api.Context
+    Oracle.Api.Oracle
+  build-depends:
+    , base
+    , aeson
+    , oracle:oracle-onchain
+    , oracle:oracle-offchain
+    , atlas-cardano
+    , swagger2
+    , servant-server
+    , servant-swagger
+    , containers
+    , text
+
+executable oracle-server
+  import:           common
+  hs-source-dirs:   server
+  main-is:          server-main.hs
+  ghc-options:
+    -O2 -threaded -rtsopts -with-rtsopts=-T
+  build-depends:
+    , aeson-pretty
+    , base
+    , bytestring
+    , atlas-cardano
+    , oracle:oracle-server-lib
+    , servant-server
+    , transformers
+    , wai
+    , wai-cors
+    , http-types
+    , warp
+
+
