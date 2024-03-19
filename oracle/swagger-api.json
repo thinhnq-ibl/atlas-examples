@@ -1,5 +1,28 @@
 {
     "definitions": {
+        "DeleteOracleParams": {
+            "properties": {
+                "csd": {
+                    "$ref": "#/definitions/GYMintingPolicyId"
+                },
+                "oldrated": {
+                    "type": "integer"
+                },
+                "orefd": {
+                    "$ref": "#/definitions/GYTxOutRef"
+                },
+                "tnd": {
+                    "$ref": "#/definitions/GYTokenName"
+                }
+            },
+            "required": [
+                "orefd",
+                "csd",
+                "tnd",
+                "oldrated"
+            ],
+            "type": "object"
+        },
         "GYMintingPolicyId": {
             "description": "This is the hash of a minting policy script.",
             "example": "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef",
@@ -48,6 +71,33 @@
                 "rate"
             ],
             "type": "object"
+        },
+        "UpdateOracleParams": {
+            "properties": {
+                "csu": {
+                    "$ref": "#/definitions/GYMintingPolicyId"
+                },
+                "oldrateu": {
+                    "type": "integer"
+                },
+                "orefu": {
+                    "$ref": "#/definitions/GYTxOutRef"
+                },
+                "rateu": {
+                    "type": "integer"
+                },
+                "tnu": {
+                    "$ref": "#/definitions/GYTokenName"
+                }
+            },
+            "required": [
+                "orefu",
+                "csu",
+                "tnu",
+                "rateu",
+                "oldrateu"
+            ],
+            "type": "object"
         }
     },
     "info": {
@@ -55,6 +105,37 @@
         "version": ""
     },
     "paths": {
+        "/oracle/delete": {
+            "post": {
+                "consumes": [
+                    "application/json;charset=utf-8"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/DeleteOracleParams"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json;charset=utf-8"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/GYTxId"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid `body`"
+                    }
+                }
+            }
+        },
         "/oracle/init": {
             "post": {
                 "consumes": [
@@ -67,6 +148,37 @@
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/InitOracleParams"
+                        }
+                    }
+                ],
+                "produces": [
+                    "application/json;charset=utf-8"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/GYTxId"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid `body`"
+                    }
+                }
+            }
+        },
+        "/oracle/update": {
+            "post": {
+                "consumes": [
+                    "application/json;charset=utf-8"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UpdateOracleParams"
                         }
                     }
                 ],
