@@ -8,19 +8,21 @@ import           System.Environment          (getArgs)
 
 import           GeniusYield.GYConfig
 
-import           Oracle.Api.Api
-import           Oracle.Api.Context
 import           Data.Aeson.Encode.Pretty    (encodePretty)
 import qualified Data.ByteString.Lazy.Char8  as BL8
+import           GeniusYield.Types
+import           Oracle.Api.Api
+import           Oracle.Api.Context
 import           Prelude                     hiding (read)
 
--- | Getting path for our core configuration.
-parseArgs :: IO FilePath
+-- | Getting path for our core configuration and the beneficiary.
+parseArgs :: IO (FilePath, FilePath)
 parseArgs = do
-  args <- getArgs
-  case args of
-    [coreCfg, skeyFile]: _ -> return (coreCfg, skeyFile)
-    _invalidArgument -> fail "Error: wrong arguments, needed a path to the CoreConfig JSON configuration file\n"
+    args <- getArgs
+    case args of
+        [coreCfgFile, skeyFile] -> return (coreCfgFile, skeyFile)
+        _invalidArgument                                 -> fail
+            "Error: wrong arguments, needed the configuration file, the sender skey file, the beneficiary address \n"
 
 main :: IO ()
 main = do
@@ -28,7 +30,7 @@ main = do
   BL8.writeFile "swagger-api.json" (encodePretty apiSwagger)
 
   putStrLn "parsing Config ..."
-  (coreCfgPath, skey) <- parseArgs
+  (coreCfgPath, skeyFile) <- parseArgs
   coreCfg <- coreConfigIO coreCfgPath  -- Parsing our core configuration.
   skey    <- readPaymentSigningKey skeyFile
   let nid    = cfgNetworkId coreCfg

@@ -106,6 +106,8 @@ library oracle-server-lib
   hs-source-dirs:   server-lib
   exposed-modules:
     Oracle.Api.Api
+    Oracle.Api.Context
+    Oracle.Api.Oracle
   build-depends:
     , base
     , aeson

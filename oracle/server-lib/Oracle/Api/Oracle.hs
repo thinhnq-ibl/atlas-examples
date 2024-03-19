@@ -12,6 +12,7 @@ import           Servant
 import           Oracle.Api.Context
 import           GeniusYield.GYConfig
 import           Oracle.Api
+import           GeniusYield.TxBuilder
 
 -- | Input parameters for init oracle.
 data InitOracleParams = InitOracleParams {
@@ -22,29 +23,25 @@ data InitOracleParams = InitOracleParams {
   }
   deriving (Show, Generic, FromJSON, Swagger.ToSchema)
 
--- | Return type for our API endpoints defined here.
-data UnsignedTxResponse = UnsignedTxResponse
-  { urspTxBodyHex :: !T.Text              -- ^ Unsigned transaction cbor.
-  , urspTxFee     :: !(Maybe Integer)     -- ^ Tx fees.
-  , urspUtxoRef   :: !(Maybe GYTxOutRef)  -- ^ Some operations might need to show for relevant UTxO generated.
-  } deriving (Show, Generic, FromJSON, ToJSON, Swagger.ToSchema)
-
 -- | Type for our Servant API.
 type OracleApi =
        "init"
     :> ReqBody '[JSON] InitOracleParams
-    :> Post    '[JSON] UnsignedTxResponse
+    :> Post    '[JSON] GYTxId
 
 -- | Serving our API.
 handleOracleApi :: Ctx -> ServerT OracleApi IO
 handleOracleApi = handleInit
 
 -- | Handle for init oracle.
-handleInit :: Ctx -> InitOracleParams -> IO UnsignedTxResponse
+handleInit :: Ctx -> InitOracleParams -> IO GYTxId
 handleInit ctx InitOracleParams{..} = do
   let nid    = cfgNetworkId $ ctxCoreCfg ctx
       sender = ctxSender ctx
-  setupOracle nid cs tn sender oref rate
+      skey = ctxSkey ctx
+      providers = ctxProviders ctx
+  txBody <- runGYTxMonadNode nid providers [sender] sender Nothing (return $ setupOracle nid cs tn sender oref rate)
+  gySubmitTx providers $ signGYTxBody txBody [skey]
 
 -- -- | Input wrapper around corresponding Plutus type.
 -- data BetRefParams = BetRefParams
