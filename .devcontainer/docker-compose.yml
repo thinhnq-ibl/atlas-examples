@@ -2,6 +2,9 @@ version: "3.5"
 volumes:
   node-ipc:
   node-db:
+  postgres:
+  pgadmin:
+
 services:
   ppp:
     # Build test_plutus_3 by Dockerfile stays on root folder
@@ -22,8 +25,47 @@ services:
     # Overrides default command so things don't shut down after the process ends.
     command: /bin/sh -c "while sleep 1000; do :; done"
 
+    networks:
+      - postgres
+      
     logging:
       driver: "json-file"
       options:
         max-size: "200k"
         max-file: "10"
+
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /Users/thinhnguyen/Documents/postgres/data
+    volumes:
+       - postgres:/Users/thinhnguyen/Documents/postgres/data
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+  
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+       - pgadmin:/Users/thinhnguyen/Documents/postgres/pgadmin
+
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+networks:
+  postgres:
+    driver: bridge
+    
