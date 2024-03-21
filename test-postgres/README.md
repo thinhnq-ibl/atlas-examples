@@ -11,3 +11,6 @@ use internal IP : 192.167.x.x to connect Postgres
 ```
 cabal run test-postgres-exe
 ```
+
+## Referrences
+https://dev.to/zelenya/how-to-use-postgresql-with-haskell-elephantine-library-review-2023-2836
