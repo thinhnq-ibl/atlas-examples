@@ -2,6 +2,12 @@
 
 This repository contains examples that illustrate the various features of Atlas. Learn more about Atlas [here](https://atlas-app.io).
 
+## GHCup
+- ghc   9.2.7
+- cabal 3.8.1.0
+- HLS   2.2.0.0 
+- Stack 2.11.1   
+
 ## Examples
 
 - **bet-ref**: Find it's walkthrough [here](https://atlas-app.io/getting-started).

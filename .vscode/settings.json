@@ -1,0 +1,13 @@
+{
+    "git.autofetch": true,
+    "editor.formatOnSave": true,
+    "haskell.formattingProvider": "fourmolu",
+    "haskell.serverEnvironment": {
+        "PATH": "/root/.ghcup/ghc/9.2.7/lib/ghc-9.2.7:$PATH"
+    },
+    "haskell.manageHLS": "GHCup",
+    "[haskell]": {
+        "editor.defaultFormatter": "vigoo.stylish-haskell"
+    },
+    "stylishHaskell.commandLine": "/root/.cabal/bin/stylish-haskell -r /workspace",
+}
